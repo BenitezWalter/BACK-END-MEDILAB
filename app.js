@@ -25,6 +25,10 @@ app.use(express.json())
 
 //Routes
 
+app.use(require('./routes/tasks.routes'))
+app.use(require('./routes/user.routes'))
+app.use(require('./routes/auth.routes'))
+
 
 //Inicializar servidor
 app.listen(port,()=>{
