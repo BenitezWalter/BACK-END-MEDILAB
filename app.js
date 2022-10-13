@@ -6,11 +6,13 @@
 
 const express = require('express')
 const cors = require('cors')
+const dbConnection = require('./db/conexion')
 require('dotenv').config()
 
 //Inicializaciones
 
 const app = express()
+dbConnection()
 
 //Settings
 const port = process.env.PORT || 3000;
