@@ -1,5 +1,6 @@
-const User =  require('../models/User')
 const bcrypt =  require ('bcrypt')
+const User = require("../models/User")
+const Tasks = require("../models/Tasks")
 
 const ctrlUser = {}
 
@@ -37,3 +38,52 @@ ctrlUser.postUser = async (req,res)=>{
     })
 
 }
+
+//Controlador para actualizar datos del USER, se requiere id en postman
+
+ctrlUser.putUser = async (req, res) => {
+
+    const id = req.params.id
+
+    const { user, email} = req.body
+
+
+    try {
+        const userUpdate = await User.findByIdAndUpdate(id,{user,email},{new:true});
+
+        return res.json({
+            msg: 'Usuario actualizado correctamente',
+            userUpdate
+        })
+    } catch (error) {
+        return res.json({
+            msg:'Error al actualizar usuario'
+        })
+    }
+};
+
+//controlador para eliminar usuario
+ctrlUser.deleteUser= async(req,res)=>{
+    const id=req.params.id
+
+    try {
+        const userDelete = await User.findByIdAndUpdate(id,{isActive:false},{new:true})
+        
+        await Tasks.deleteMany({userId:req.user._id})
+
+        return res.json(
+            {
+                message:`El usuario ha sido eliminado de la bd junto con sus tareas`,
+                userDelete:userDelete.user
+            }
+        )
+
+        
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
+
+module.exports = ctrlUser

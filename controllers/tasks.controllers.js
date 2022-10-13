@@ -24,11 +24,10 @@ ctrlTask.getTasksForUserId = async (req,res)=>{
 
 ctrlTask.postTasks = async (req,res)=>{
  try {
-    const idUser = req.user._id
     const {titulo,descripcion} = req.body
-
+    console.log(req.user)
     const newTask = new Tasks({
-        idUser,titulo,descripcion
+        titulo,descripcion, userId:req.user._id
     })
 
     const task = await newTask.save()
@@ -44,15 +43,25 @@ ctrlTask.postTasks = async (req,res)=>{
 
 ctrlTask.putTasks = async (req,res)=>{
     const id = req.params.id
+    const user = req.user
 
+    const tarea = await Tasks.findById(id)
+    console.log(tarea.userId)
+    console.log(user._id)
     const {titulo, descripcion} = req.body
 
     try {
-        const tarea = await Tasks.findByIdAndUpdate(id,{titulo,descripcion},{new:true})
+        if(toString(tarea.userId) != user._id){
+            return res.json({
+                message:"La tarea no le pertenece"
+            })
+        }
+
+        const tareaUpdate = await Tasks.findByIdAndUpdate(id,{titulo,descripcion},{new:true})
 
         return res.json({
             message:"Tarea actualizada",
-            tarea,
+            tareaUpdate,
             id
         })
 
@@ -65,7 +74,7 @@ ctrlTask.putTasks = async (req,res)=>{
 
 ctrlTask.putStatusTasks=async(req,res)=>{
     const id = req.params.id
-
+    
     const {isDone} = req.body
 
     try {
