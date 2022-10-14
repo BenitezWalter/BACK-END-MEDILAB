@@ -48,6 +48,7 @@ ctrlTask.putTasks = async (req,res)=>{
     const tarea = await Tasks.findById(id)
 
     const {titulo, descripcion} = req.body
+    
     console.log(JSON.stringify(tarea.userId))
     console.log(JSON.stringify(user._id))
 
