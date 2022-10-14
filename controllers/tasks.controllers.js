@@ -11,10 +11,10 @@ ctrlTask.getTasks = async (req,res)=>{
 }
 
 ctrlTask.getTasksForUserId = async (req,res)=>{
-    const idUser = req.user._id
+    const userId = req.user._id //toma el id del usuario ingresado
     
-    const filterTasks = await Tasks.find({idUser})
-    .populate('userId', ['user'])
+    const filterTasks = await Tasks.find({userId})
+    .populate('userId', ['user','email'])
 
     return res.json({
         message:`Tareas del usuario ${req.user.user}`,
@@ -46,24 +46,27 @@ ctrlTask.putTasks = async (req,res)=>{
     const user = req.user
 
     const tarea = await Tasks.findById(id)
-    console.log(tarea.userId)
-    console.log(user._id)
+
     const {titulo, descripcion} = req.body
+    console.log(JSON.stringify(tarea.userId))
+    console.log(JSON.stringify(user._id))
 
     try {
-        if(toString(tarea.userId) != user._id){
+        if(JSON.stringify(tarea.userId) == JSON.stringify(user._id)){
+
+            const tareaUpdate = await Tasks.findByIdAndUpdate(id,{titulo,descripcion},{new:true})
+
             return res.json({
-                message:"La tarea no le pertenece"
+                message:"Tarea actualizada",
+                tareaUpdate
             })
+            
         }
-
-        const tareaUpdate = await Tasks.findByIdAndUpdate(id,{titulo,descripcion},{new:true})
-
         return res.json({
-            message:"Tarea actualizada",
-            tareaUpdate,
-            id
+            message:"No puede actualizar una tarea que no es suya"
         })
+
+        
 
 
     } catch (error) {
@@ -74,16 +77,26 @@ ctrlTask.putTasks = async (req,res)=>{
 
 ctrlTask.putStatusTasks=async(req,res)=>{
     const id = req.params.id
-    
-    const {isDone} = req.body
+    const user = req.user
+
+    const tarea = await Tasks.findById(id)
+
+    console.log(tarea.userId)
+    console.log(JSON.stringify(user._id))
 
     try {
-        const tarea = await Tasks.findByIdAndUpdate(id,{isDone},{new:true})
+        if(JSON.stringify(tarea.userId) == JSON.stringify(user._id)){
 
+            const tareaUpdate = await Tasks.findByIdAndUpdate(id,{isDone:true},{new:true})
+
+            return res.json({
+                message:"Estado de la tarea actualizado",
+                tareaUpdate
+            })
+            
+        }
         return res.json({
-            message:"Tarea actualizada",
-            tarea,
-            id
+            message:"No puede actualizar el estado de una tarea que no le pertenece"
         })
 
 
@@ -95,13 +108,32 @@ ctrlTask.putStatusTasks=async(req,res)=>{
 
 ctrlTask.deleteTask = async (req,res)=>{
     const id = req.params.id
+    const user = req.user
+
+    const tarea = await Tasks.findById(id)
+
+    console.log(JSON.stringify(tarea.userId))
+    console.log(JSON.stringify(user._id))
 
     try {
-        const taskDelete =  await Tasks.findByIdAndDelete(id)
+        if(JSON.stringify(tarea.userId) == JSON.stringify(user._id)){
+
+            const tareaDelete = await Tasks.deleteOne({id})
+
+            return res.json({
+                message:"Tarea eliminada con exito",
+            })
+            
+        }
         return res.json({
-            message:`Tarea con el id ${taskDelete.id} ha sido eliminada`
+            message:"No puede eliminar una tarea que no es suya"
         })
+
+        
+
+
     } catch (error) {
+        console.log("No se pudo actualizar")
         console.log(error)
     }
 }

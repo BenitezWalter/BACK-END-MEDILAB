@@ -69,11 +69,10 @@ ctrlUser.deleteUser= async(req,res)=>{
     try {
         const userDelete = await User.findByIdAndUpdate(id,{isActive:false},{new:true})
         
-        await Tasks.deleteMany({userId:req.user._id})
 
         return res.json(
             {
-                message:`El usuario ha sido eliminado de la bd junto con sus tareas`,
+                message:`El usuario ha sido eliminado`,
                 userDelete:userDelete.user
             }
         )

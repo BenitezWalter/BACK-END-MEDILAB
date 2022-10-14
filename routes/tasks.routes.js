@@ -4,11 +4,12 @@ const {getTasks,postTasks,putTasks,deleteTask,getTasksForUserId, putStatusTasks}
 const validarJWT = require('../middlewares/validar-jwt')
 
 router.get("/tareas",getTasks)
-router.get("/tareas/tareasFiltradas",[validarJWT],getTasksForUserId)
 router.post("/tareas",[validarJWT],postTasks)
 router.put("/tareas/:id",[validarJWT],putTasks)
-router.put("/tareas/actualizarEstado/:id",[validarJWT],putStatusTasks)
 router.delete("/tareas/:id",[validarJWT],deleteTask)
+router.get("/tareas/tareasFiltradas",[validarJWT],getTasksForUserId)
+router.put("/tareas/completarTarea/:id",[validarJWT],putStatusTasks)
+
 
 
 module.exports = router

@@ -38,4 +38,78 @@ npm run dev
 npm start
 ```
 
-## Alumno:Benitez Walter
+### Para crear un usuario utilizar la petición POST en:
+
+```bash
+localhost:4000/user/
+```
+
+### Utilizar en siguiente cuerpo:
+
+```bash
+    user:,
+    password:,
+    email:
+```
+### Para iniciar sesion utilizar la peticion POST en:
+
+```bash
+localhost:4000/login/
+```
+
+### Utilizar el siguiente cuerpo:
+
+```bash
+user:
+password:
+```
+
+### (REQUIERE INICIAR SESION) Para crear una nueva tarea utilizar una peticion POST en:
+
+```bash
+localhost:4000/tareas/
+```
+### Utilizar el siguiente cuerpo:
+
+```bash
+titulo:
+descripcion:
+```
+
+Al crear la tarea, se guardara el userId del usuario que esta ingresado en ese momento.
+
+### Para obtener un listado de todas las tareas del usuario utilizar una peticion GET en:
+
+```bash
+localhost:4000/tareas/
+```
+### Para editar una tarea utilizar una peticion PUT en:
+
+```bash
+localhost:4000/tareas/:id
+```
+
+A continuación se detallara como utilizar los controladores exigidos por el profesor
+
+### Para obtener las tareas creadas por cada usuario realizar una peticion GET en:
+
+```bash
+localhost:4000/tareas/tareasFiltradas
+```
+
+Esto mostrara las tareas del usuario que se encuentre actualmente logeado (poner el token en orden para logear distintos)
+
+### Para actualizar el estado de las tareas a completada (isDone:true) utilizar la peticion PUT en:
+
+
+```bash
+localhost:4000/tareas/:id
+```
+
+### Alumno : Benitez Walter
+
+
+
+
+
+
