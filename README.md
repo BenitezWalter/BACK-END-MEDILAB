@@ -89,6 +89,12 @@ localhost:4000/tareas/
 localhost:4000/tareas/:id
 ```
 
+### Para eliminar una tarea utilizar una peticion DELETE en:
+
+```bash
+localhost:4000/tareas/:id
+```
+
 A continuación se detallara como utilizar los controladores exigidos por el profesor
 
 ### Para obtener las tareas creadas por cada usuario realizar una peticion GET en:
