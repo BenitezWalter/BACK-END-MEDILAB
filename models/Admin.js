@@ -1,6 +1,6 @@
 const {model, Schema} =  require('mongoose')
 
-const UserSchema = new Schema ({
+const AdminSchema = new Schema ({
     dni:{
         type:String,
         required:true
@@ -22,6 +22,10 @@ const UserSchema = new Schema ({
         type:String,
         required:true
     },
+    codeAdmin:{
+        type:String,
+        required:true
+    },
     isActive:{
         type:Boolean,
         default:true
@@ -32,4 +36,4 @@ const UserSchema = new Schema ({
 })
 
 
-module.exports = model('Users', UserSchema);
+module.exports = model('Admins', AdminSchema);
