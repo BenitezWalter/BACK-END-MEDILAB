@@ -1,6 +1,7 @@
-const bcrypt =  require ('bcrypt')
+const bcrypt = require('bcrypt')
 const User = require("../models/User")
-const Tasks = require("../models/Tasks")
+const Medic = require('../models/Medic')
+const Admin = require('../models/Admin')
 
 const ctrlUser = {}
 
@@ -9,8 +10,8 @@ const ctrlUser = {}
 
 //Obtener los usuarios de la BD
 
-ctrlUser.getUser = async (req,res)=>{
-    
+ctrlUser.getUser = async (req, res) => {
+
     const users = await User.find()
 
     return res.json(users)
@@ -18,24 +19,77 @@ ctrlUser.getUser = async (req,res)=>{
 
 //Controlador para crear un nuevo usuario (POST)
 
-ctrlUser.postUser = async (req,res)=>{
-    
-    const {user, password:passwordRecibido, email} =  req.body
+ctrlUser.postUser = async (req, res) => {
 
-    const passwordCrypt = bcrypt.hashSync(passwordRecibido, 10)//Encriptar
 
-    const newUser = new User({
-        user,
-        password:passwordCrypt,
-        email
-    })
+    try {
+        const {
+            dni,
+            nombreyape,
+            email,
+            password: passwordRecibido,
+            role
+        } = req.body
 
-    const username = await newUser.save()
+        if (dni == "" || nombreyape == "" || email == "" || password == "") {
+            console.log("No se puede registrar, faltan campos por completar")
+            return
+        }
 
-    return res.json({
-        message:"Usuario creado correctamente, sus datos son:",
-        username
-    })
+        if (role == "user") {
+            const passwordCrypt = bcrypt.hashSync(passwordRecibido, 10) //Encriptar
+
+            const newUser = new User({
+                dni,
+                nombreyape,
+                email,
+                password: passwordCrypt,
+                role
+            })
+
+            const username = await newUser.save()
+
+            return res.json({
+                message: "Usuario creado correctamente, sus datos son:",
+                username
+            })
+        } else if (role == "medic") {
+            const newMedic = new Medic({
+                dni,
+                nombreyape,
+                email,
+                password: passwordCrypt,
+                role,
+                enrollment
+            })
+
+            const userMedic = await newMedic.save()
+
+            return res.json({
+                message: "Usuario creado correctamente, sus datos son:",
+                userMedic
+            })
+        } else if (role == "admin") {
+            const newAdmin = new Admin({
+                dni,
+                nombreyape,
+                email,
+                password: passwordCrypt,
+                role,
+                codeAdmin
+            })
+
+            const userAdmin = await newAdmin.save()
+
+            return res.json({
+                message: "Usuario creado correctamente, sus datos son:",
+                userAdmin
+            })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
 
 }
 
@@ -45,11 +99,19 @@ ctrlUser.putUser = async (req, res) => {
 
     const id = req.params.id
 
-    const { user, email} = req.body
+    const {
+        user,
+        email
+    } = req.body
 
 
     try {
-        const userUpdate = await User.findByIdAndUpdate(id,{user,email},{new:true});
+        const userUpdate = await User.findByIdAndUpdate(id, {
+            user,
+            email
+        }, {
+            new: true
+        });
 
         return res.json({
             msg: 'Usuario actualizado correctamente',
@@ -57,27 +119,29 @@ ctrlUser.putUser = async (req, res) => {
         })
     } catch (error) {
         return res.json({
-            msg:'Error al actualizar usuario'
+            msg: 'Error al actualizar usuario'
         })
     }
 };
 
 //controlador para eliminar usuario
-ctrlUser.deleteUser= async(req,res)=>{
-    const id=req.params.id
+ctrlUser.deleteUser = async (req, res) => {
+    const id = req.params.id
 
     try {
-        const userDelete = await User.findByIdAndUpdate(id,{isActive:false},{new:true})
-        
+        const userDelete = await User.findByIdAndUpdate(id, {
+            isActive: false
+        }, {
+            new: true
+        })
 
-        return res.json(
-            {
-                message:`El usuario ha sido eliminado`,
-                userDelete:userDelete.user
-            }
-        )
 
-        
+        return res.json({
+            message: `El usuario ha sido eliminado`,
+            userDelete: userDelete.user
+        })
+
+
     } catch (error) {
         console.log(error)
     }
