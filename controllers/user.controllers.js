@@ -28,7 +28,9 @@ ctrlUser.postUser = async (req, res) => {
             nombreyape,
             email,
             password,
-            role
+            role,
+            enrollment,
+            codeAdmin
         } = req.body
 
         console.log([dni, nombreyape, email, password])
