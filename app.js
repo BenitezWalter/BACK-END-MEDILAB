@@ -8,6 +8,7 @@ const express = require('express')
 const cors = require('cors')
 const dbConnection = require('./db/conexion')
 require('dotenv').config()
+const morgan = require('morgan')
 
 //Inicializaciones
 
@@ -20,6 +21,7 @@ const port = process.env.PORT || 3000;
 //Middlewares
 app.use(cors())
 app.use(express.json())
+app.use(morgan('combined'))
 //Archivos estaticos
 
 

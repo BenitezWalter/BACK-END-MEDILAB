@@ -27,17 +27,19 @@ ctrlUser.postUser = async (req, res) => {
             dni,
             nombreyape,
             email,
-            password: passwordRecibido,
+            password,
             role
         } = req.body
 
-        if (dni == "" || nombreyape == "" || email == "" || password == "") {
+        console.log([dni, nombreyape, email, password])
+
+        if (!dni|| !nombreyape || !email || !password || !role) {
             console.log("No se puede registrar, faltan campos por completar")
             return
         }
 
+        const passwordCrypt = bcrypt.hashSync(password, 10) //Encriptar
         if (role == "user") {
-            const passwordCrypt = bcrypt.hashSync(passwordRecibido, 10) //Encriptar
 
             const newUser = new User({
                 dni,
@@ -54,6 +56,7 @@ ctrlUser.postUser = async (req, res) => {
                 username
             })
         } else if (role == "medic") {
+            
             const newMedic = new Medic({
                 dni,
                 nombreyape,
@@ -78,7 +81,7 @@ ctrlUser.postUser = async (req, res) => {
                 role,
                 codeAdmin
             })
-
+            if(!codeAdmin) return console.log("no hay codigo de administrador ")
             const userAdmin = await newAdmin.save()
 
             return res.json({
