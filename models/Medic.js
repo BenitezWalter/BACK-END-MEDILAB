@@ -3,7 +3,8 @@ const {model, Schema} =  require('mongoose')
 const MedicSchema = new Schema ({
     dni:{
         type:String,
-        required:true
+        required:true,
+        unique:true
     },
     nombreyape:{
         type:String,

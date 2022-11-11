@@ -3,7 +3,8 @@ const {model, Schema} =  require('mongoose')
 const UserSchema = new Schema ({
     dni:{
         type:String,
-        required:true
+        required:true,
+        unique:true
     },
     nombreyape:{
         type:String,
@@ -21,6 +22,12 @@ const UserSchema = new Schema ({
     role:{
         type:String,
         required:true
+    },
+    enrollment:{
+        type:String
+    },
+    codeAdmin:{
+        type:String
     },
     isActive:{
         type:Boolean,
