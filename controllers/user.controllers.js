@@ -1,11 +1,6 @@
 const bcrypt = require('bcrypt')
 const User = require("../models/User")
-const Medic = require('../models/Medic')
-const Admin = require('../models/Admin')
-const modelUser = require('../models/User')
-const modelMedic = require('../models/Medic')
-const modelAdmin = require('../models/Admin')
-const {findUsuarioDNI,findUsuarioEMAIL} = require('../helpers/buscarUsuarios')
+const {findUsuario} = require('../helpers/buscarUsuarios')
 
 const ctrlUser = {}
 
@@ -47,8 +42,7 @@ ctrlUser.postUser = async (req, res) => {
         const passwordCrypt = bcrypt.hashSync(password, 10) //Encriptar
         if (role === "user") {//genera usuario si es un paciente
 
-            findUsuarioDNI(modelUser,dni,role,res)
-            findUsuarioEMAIL(modelUser,email,role,res)
+            findUsuario(dni,email,res)
 
             const newUser = new User({
                 dni,
@@ -67,8 +61,7 @@ ctrlUser.postUser = async (req, res) => {
             })
         } else if (role === "medic") {//genera usuario si es un medico
             
-            findUsuarioDNI(modelMedic,dni,role,res)
-            findUsuarioEMAIL(modelMedic,email,role,res)
+            findUsuario(dni,email,res)
 
             const newMedic = new User({
                 dni,
@@ -87,8 +80,7 @@ ctrlUser.postUser = async (req, res) => {
             })
         } else if (role === "admin") {//genera usuario si es un admin
 
-            findUsuarioDNI(modelAdmin,dni,role,res)
-            findUsuarioEMAIL(modelAdmin,email,role,res)
+            findUsuario(dni,email,res)
 
             const newAdmin = new User({
                 dni,
